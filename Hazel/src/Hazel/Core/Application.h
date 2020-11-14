@@ -18,7 +18,7 @@ namespace Hazel {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Hazel App");
 		virtual ~Application();
 
 		void OnEvent(Event& e);
@@ -29,6 +29,8 @@ namespace Hazel {
 		Window& GetWindow() { return *m_Window; }
 
 		void Close();
+
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
 		static Application& Get() { return *s_Instance; }
 	private:
