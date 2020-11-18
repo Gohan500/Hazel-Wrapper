@@ -5,7 +5,7 @@
 
 namespace Hazel {
 	
-	void OpenGLMessageCallback(
+	/*void OpenGLMessageCallback(
 		unsigned source,
 		unsigned type,
 		unsigned id,
@@ -23,19 +23,19 @@ namespace Hazel {
 		}
 		
 		HZ_CORE_ASSERT(false, "Unknown severity level!");
-	}
+	}*/
 
 	void OpenGLRendererAPI::Init()
 	{
 		HZ_PROFILE_FUNCTION();
 
-	#ifdef HZ_DEBUG
+		/*#ifdef HZ_DEBUG
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(OpenGLMessageCallback, nullptr);
-		
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
-	#endif
+
+		(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+	#endif*/
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

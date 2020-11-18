@@ -30,28 +30,28 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glCreateVertexArrays(1, &m_RendererID);
+		glGenBuffers(1, &m_RendererID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glDeleteVertexArrays(1, &m_RendererID);
+		glDeleteBuffers(1, &m_RendererID);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glBindVertexArray(m_RendererID);
+		glBindBuffer(GL_VERTEX_SHADER,m_RendererID);
 	}
 
 	void OpenGLVertexArray::Unbind() const
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glBindVertexArray(0);
+		glBindBuffer(GL_VERTEX_SHADER,0);
 	}
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
@@ -60,7 +60,7 @@ namespace Hazel {
 
 		HZ_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
-		glBindVertexArray(m_RendererID);
+		glBindBuffer(GL_VERTEX_SHADER, m_RendererID);
 		vertexBuffer->Bind();
 
 		const auto& layout = vertexBuffer->GetLayout();
@@ -101,7 +101,7 @@ namespace Hazel {
 							element.Normalized ? GL_TRUE : GL_FALSE,
 							layout.GetStride(),
 							(const void*)(element.Offset + sizeof(float) * count * i));
-						glVertexAttribDivisor(m_VertexBufferIndex, 1);
+						//glVertexAttribDivisor(m_VertexBufferIndex, 1);
 						m_VertexBufferIndex++;
 					}
 					break;
@@ -118,7 +118,7 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		glBindVertexArray(m_RendererID);
+		glBindBuffer(GL_VERTEX_SHADER, m_RendererID);
 		indexBuffer->Bind();
 
 		m_IndexBuffer = indexBuffer;
