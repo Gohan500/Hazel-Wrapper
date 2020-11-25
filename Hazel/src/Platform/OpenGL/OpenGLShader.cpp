@@ -141,6 +141,7 @@ namespace Hazel {
 
 				glDeleteShader(shader);
 
+				HZ_CORE_INFO("{0}", infoLog.data());
 				HZ_CORE_ERROR("{0}", infoLog.data());
 				HZ_CORE_ASSERT(false, "Shader compilation failure!");
 				break;
@@ -172,7 +173,8 @@ namespace Hazel {
 			
 			for (auto id : glShaderIDs)
 				glDeleteShader(id);
-
+			
+			HZ_CORE_INFO("{0}", infoLog.data());
 			HZ_CORE_ERROR("{0}", infoLog.data());
 			HZ_CORE_ASSERT(false, "Shader link failure!");
 			return;

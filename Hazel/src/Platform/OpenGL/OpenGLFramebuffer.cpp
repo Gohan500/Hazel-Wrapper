@@ -22,6 +22,7 @@ namespace Hazel {
 
 	void OpenGLFramebuffer::Invalidate()
 	{
+
 		if (m_RendererID)
 		{
 			glDeleteFramebuffers(1, &m_RendererID);
@@ -29,20 +30,41 @@ namespace Hazel {
 			glDeleteTextures(1, &m_DepthAttachment);
 		}
 
-		glGenFramebuffers(1, &m_RendererID);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-		
 		glGenTextures(1, &m_ColorAttachment);
 		glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_ARM_rgba8, m_Specification.Width, m_Specification.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Specification.Width, m_Specification.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		// Build the texture that will serve as the depth attachment for the framebuffer.
 		glGenTextures(1, &m_DepthAttachment);
 		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Specification.Width, m_Specification.Height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		// Build the framebuffer.
+		glGenFramebuffers(1, &m_RendererID);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
+
+		GLenum g;
+
+		while(true)
+		{
+			g = glGetError();
+
+			if (g <= 0)
+				break;
+			else
+				HZ_CORE_INFO(g);
+		}
 
 		HZ_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
